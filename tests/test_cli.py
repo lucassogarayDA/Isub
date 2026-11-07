@@ -25,6 +25,9 @@ class ParsePortsTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     parse_ports(value)
 
+    def test_accepts_tcp_port_boundaries(self):
+        self.assertEqual(parse_ports("1,65535"), [1, 65535])
+
     def test_rejects_ports_outside_tcp_range(self):
         for value in ("0", "65536", "1-65536"):
             with self.subTest(value=value):
