@@ -12,15 +12,36 @@ __version__ = "1.0.0"
 
 
 def parse_ports(port_str: str):
-    ports = []
-    for part in port_str.split(","):
-        part = part.strip()
+    """Parse comma-separated ports and inclusive ranges.
+
+    Raises ValueError for malformed entries or ports outside 1..65535.
+    """
+    if not isinstance(port_str, str) or not port_str.strip():
+        raise ValueError("empty port specification")
+
+    ports = set()
+    for raw_part in port_str.split(","):
+        part = raw_part.strip()
+        if not part:
+            raise ValueError("empty port entry")
+
         if "-" in part:
-            start, end = part.split("-")
-            ports.extend(range(int(start), int(end) + 1))
+            bounds = part.split("-")
+            if len(bounds) != 2 or not all(value.strip() for value in bounds):
+                raise ValueError(f"invalid port range: {part}")
+            start, end = (int(value.strip()) for value in bounds)
+            if start > end:
+                raise ValueError(f"descending port range: {part}")
+            values = range(start, end + 1)
         else:
-            ports.append(int(part))
-    return sorted(set(ports))
+            values = (int(part),)
+
+        for port in values:
+            if not 1 <= port <= 65535:
+                raise ValueError(f"port out of range: {port}")
+            ports.add(port)
+
+    return sorted(ports)
 
 
 def main():
