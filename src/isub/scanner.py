@@ -5,6 +5,11 @@ from concurrent.futures import ThreadPoolExecutor
 from isub.services import SERVICES
 
 
+def sanitize_banner(value: str, limit: int = 80) -> str:
+    """Remove control characters before displaying remote service data."""
+    return "".join(char for char in value if char.isprintable())[:limit]
+
+
 def scan_port(host: str, port: int, timeout: float = 0.5, grab_banner: bool = True):
     """Return (port, service, banner) if open, else None."""
     try:
@@ -19,7 +24,7 @@ def scan_port(host: str, port: int, timeout: float = 0.5, grab_banner: bool = Tr
                 try:
                     sock.settimeout(1.0)
                     raw = sock.recv(1024)
-                    banner = raw.decode(errors="ignore").strip()[:80]
+                    banner = sanitize_banner(raw.decode(errors="replace").strip())
                 except (OSError, socket.timeout):
                     pass
             return (port, service, banner)
