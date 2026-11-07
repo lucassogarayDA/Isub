@@ -4,6 +4,7 @@ import argparse
 import sys
 import time
 import socket
+import math
 from isub.banner import LOGO, STRINGS
 from isub.scanner import scan
 from isub.logger import setup_logger
@@ -63,6 +64,16 @@ def main():
     args = parser.parse_args()
     t = STRINGS[args.lang]
 
+    try:
+        ports = parse_ports(args.ports)
+    except (ValueError, OverflowError) as exc:
+        parser.error(f"invalid port specification: {exc}")
+
+    if not 1 <= args.threads <= 256:
+        parser.error("--threads must be between 1 and 256")
+    if not math.isfinite(args.timeout) or not 0 < args.timeout <= 30:
+        parser.error("--timeout must be greater than 0 and at most 30 seconds")
+
     print(LOGO)
 
     if not args.yes:
@@ -75,12 +86,6 @@ def main():
         socket.gethostbyname(args.host)
     except socket.gaierror:
         print(t["invalid_host"])
-        sys.exit(1)
-
-    try:
-        ports = parse_ports(args.ports)
-    except ValueError:
-        print(t["invalid_range"])
         sys.exit(1)
 
     logger = setup_logger(args.log)
