@@ -7,7 +7,7 @@ LOGO = r"""
   | | ___) | |_| | |_) |
  |___|____/ \___/|____/
 
-    Isub v1.0 - TCP Port Scanner
+    Isub v1.0.1 - TCP Port Scanner
 """
 
 STRINGS = {
@@ -19,6 +19,8 @@ STRINGS = {
         "done": "[OK] {count} puertos abiertos en {time:.2f}s",
         "log_saved": "Log guardado en {path}",
         "invalid_range": "Rango de puertos inválido.",
+        "invalid_threads": "La cantidad de hilos debe estar entre 1 y 256.",
+        "invalid_timeout": "El tiempo de espera debe ser mayor que 0 y como máximo 30 segundos.",
         "invalid_host": "Host inválido o no resuelve.",
     },
     "en": {
@@ -29,6 +31,8 @@ STRINGS = {
         "done": "[OK] {count} open ports in {time:.2f}s",
         "log_saved": "Log saved to {path}",
         "invalid_range": "Invalid port range.",
+        "invalid_threads": "Thread count must be between 1 and 256.",
+        "invalid_timeout": "Timeout must be greater than 0 and at most 30 seconds.",
         "invalid_host": "Invalid host or cannot resolve.",
     },
 }
