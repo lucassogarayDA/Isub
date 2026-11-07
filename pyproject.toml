@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "isubing"
-version = "1.0.0"
+version = "1.0.1"
 description = "A fast, multithreaded TCP port scanner with service detection and logging."
 readme = "README.md"
 requires-python = ">=3.8"
