@@ -9,7 +9,7 @@ from isub.banner import LOGO, STRINGS
 from isub.scanner import scan
 from isub.logger import setup_logger
 
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 
 
 def parse_ports(port_str: str):
@@ -51,7 +51,7 @@ def main():
         description="Isub - Fast TCP Port Scanner",
         epilog="Use only on systems you own or have written authorization to test.",
     )
-    parser.add_argument("-H", "--host", required=True, help="Target host (IP or domain)")
+    parser.add_argument("-H", "--host", required=True, help="Target IPv4 address or hostname")
     parser.add_argument("-p", "--ports", default="1-1024", help="Ports: '1-1024' or '22,80,443'")
     parser.add_argument("-t", "--threads", type=int, default=100, help="Concurrent threads (default: 100)")
     parser.add_argument("--timeout", type=float, default=0.5, help="Timeout per port in seconds (default: 0.5)")
@@ -82,27 +82,31 @@ def main():
             print(t["aborted"])
             sys.exit(0)
 
+    host = args.host.strip()
+    if not host or any(char.isspace() for char in host):
+        parser.error(t["invalid_host"])
+
     try:
-        socket.gethostbyname(args.host)
-    except socket.gaierror:
+        resolved_host = socket.gethostbyname(host)
+    except (socket.gaierror, UnicodeError):
         print(t["invalid_host"])
         sys.exit(1)
 
     logger = setup_logger(args.log)
-    logger.info(f"Scan start: host={args.host}, ports={args.ports}, threads={args.threads}")
+    logger.info(f"Scan start: host={host}, ports={args.ports}, threads={args.threads}")
 
     print(t["scanning"].format(host=args.host))
-    start_time = time.time()
+    start_time = time.monotonic()
 
     results = scan(
-        host=args.host,
+        host=resolved_host,
         ports=ports,
         threads=args.threads,
         timeout=args.timeout,
         grab_banner=not args.no_banner,
     )
 
-    elapsed = time.time() - start_time
+    elapsed = time.monotonic() - start_time
 
     for port, service, banner in results:
         extra = f" | {banner}" if banner else ""
