@@ -40,16 +40,16 @@ Scan the first 1024 ports on localhost:
 isub -H 127.0.0.1 -p 1-1024
 ```
 
-Scan specific ports on a remote host:
+Scan selected ports on a system you are authorized to test:
 
 ```bash
 isub -H example.com -p 22,80,443 --lang en
 ```
 
-Full scan with custom threads and timeout:
+Run a small, controlled scan against your own local machine:
 
 ```bash
-isub -H 192.168.1.1 -p 1-65535 -t 200 --timeout 1.0 -y
+isub -H 127.0.0.1 -p 1-1024 -t 50 --timeout 1.0
 ```
 
 ---
@@ -66,18 +66,23 @@ Features
 
 ---
 
-Options
+## Options
 
-Flag Description Default
--H, --host Target host (IP or domain) — required —
--p, --ports Port range or list (1-1024 or 22,80,443) 1-1024
--t, --threads Number of concurrent threads 100
---timeout Timeout per port in seconds 0.5
---no-banner Skip banner grabbing False
--l, --log Log file path isub.log
--y, --yes Skip authorization confirmation False
---lang Language: es or en es
--v, --version Show version and exit —
+| Flag | Description | Default |
+|---|---|---|
+| `-H, --host` | Target IPv4 address or hostname (required) | — |
+| `-p, --ports` | Comma-separated ports or inclusive ranges | `1-1024` |
+| `-t, --threads` | Concurrent worker threads (1–256) | `100` |
+| `--timeout` | Connection timeout in seconds (greater than 0, up to 30) | `0.5` |
+| `--no-banner` | Skip banner grabbing | Disabled |
+| `-l, --log` | Log file path | `isub.log` |
+| `-y, --yes` | Skip the interactive authorization prompt | Disabled |
+| `--lang` | Output language: `es` or `en` | `es` |
+| `-v, --version` | Show version and exit | — |
+
+Port values must be between 1 and 65535. Ranges must be ascending. Isub validates the input before starting.
+
+The `--yes` flag only skips the prompt; it does not grant authorization. Use Isub only on systems you own or have explicit permission to test.
 
 ---
 
@@ -90,7 +95,7 @@ Example Output
   | | ___) | |_| | |_) |
  |___|____/ \___/|____/
 
-    Isub v1.0 - TCP Port Scanner
+    Isub v1.0.1 - TCP Port Scanner
 
 Scanning 127.0.0.1 ...
 [+] 22/SSH OPEN | OpenSSH 8.9
@@ -109,7 +114,15 @@ Isub writes all scan results to a rotating log file (isub.log by default). Logs 
 
 ---
 
-Development
+## Development
+
+Run the unit tests:
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+GitHub Actions runs this test suite on Python 3.8, 3.10, 3.12, and 3.14.
 
 Run locally without installing:
 
