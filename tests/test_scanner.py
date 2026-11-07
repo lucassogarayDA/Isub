@@ -7,7 +7,8 @@ from isub.scanner import sanitize_banner
 
 class BannerSanitizationTests(unittest.TestCase):
     def test_removes_control_characters(self):
-        self.assertEqual(sanitize_banner("OpenSSH\\x1b[31m\\n8.9"), "OpenSSH[31m8.9")
+        sample = "OpenSSH" + chr(27) + "[31m" + chr(10) + "8.9"
+        self.assertEqual(sanitize_banner(sample), "OpenSSH[31m8.9")
 
     def test_limits_banner_length(self):
         self.assertEqual(sanitize_banner("x" * 100, limit=12), "x" * 12)
