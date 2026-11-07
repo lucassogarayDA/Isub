@@ -20,10 +20,10 @@ def scan_port(host: str, port: int, timeout: float = 0.5, grab_banner: bool = Tr
                     sock.settimeout(1.0)
                     raw = sock.recv(1024)
                     banner = raw.decode(errors="ignore").strip()[:80]
-                except Exception:
+                except (OSError, socket.timeout):
                     pass
             return (port, service, banner)
-    except Exception:
+    except OSError:
         return None
 
 
