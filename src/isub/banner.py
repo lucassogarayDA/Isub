@@ -7,7 +7,7 @@ LOGO = r"""
   | | ___) | |_| | |_) |
  |___|____/ \___/|____/
 
-    Isub v1.0.1 - TCP Port Scanner
+    Isub v1.0.2 - TCP Port Scanner
 """
 
 STRINGS = {
