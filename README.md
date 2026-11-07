@@ -61,6 +61,7 @@ Features
 · 📡 Banner grabbing: captures the first bytes sent by services to reveal versions
 · 📝 Rotating logs: automatic log rotation to avoid filling your disk
 · 🌐 Bilingual: Spanish and English output (--lang es / --lang en)
+· 🧹 Safe output: remote banner text is cleaned of terminal control characters
 · 📦 Zero dependencies: pure Python standard library
 · 🖥️ Cross-platform: Linux, macOS, Windows, Termux
 
@@ -70,7 +71,7 @@ Features
 
 | Flag | Description | Default |
 |---|---|---|
-| `-H, --host` | Target IPv4 address or hostname (required) | — |
+| `-H, --host` | Target IPv4 address or hostname with an IPv4 DNS record (required) | — |
 | `-p, --ports` | Comma-separated ports or inclusive ranges | `1-1024` |
 | `-t, --threads` | Concurrent worker threads (1–256) | `100` |
 | `--timeout` | Connection timeout in seconds (greater than 0, up to 30) | `0.5` |
@@ -80,7 +81,7 @@ Features
 | `--lang` | Output language: `es` or `en` | `es` |
 | `-v, --version` | Show version and exit | — |
 
-Port values must be between 1 and 65535. Ranges must be ascending. Isub validates the input before starting.
+Port values must be between 1 and 65535. Ranges must be ascending. Isub validates the input before starting. Hostnames are resolved to IPv4 before scanning; IPv6 targets are not supported.
 
 The `--yes` flag only skips the prompt; it does not grant authorization. Use Isub only on systems you own or have explicit permission to test.
 
@@ -95,7 +96,7 @@ Example Output
   | | ___) | |_| | |_) |
  |___|____/ \___/|____/
 
-    Isub v1.0.1 - TCP Port Scanner
+    Isub v1.0.2 - TCP Port Scanner
 
 Scanning 127.0.0.1 ...
 [+] 22/SSH OPEN | OpenSSH 8.9
