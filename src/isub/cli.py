@@ -9,7 +9,7 @@ from isub.banner import LOGO, STRINGS
 from isub.scanner import scan
 from isub.logger import setup_logger
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
 
 def parse_ports(port_str: str):
@@ -67,12 +67,12 @@ def main():
     try:
         ports = parse_ports(args.ports)
     except (ValueError, OverflowError) as exc:
-        parser.error(f"invalid port specification: {exc}")
+        parser.error(f"{t['invalid_range']} {exc}")
 
     if not 1 <= args.threads <= 256:
-        parser.error("--threads must be between 1 and 256")
+        parser.error(t["invalid_threads"])
     if not math.isfinite(args.timeout) or not 0 < args.timeout <= 30:
-        parser.error("--timeout must be greater than 0 and at most 30 seconds")
+        parser.error(t["invalid_timeout"])
 
     print(LOGO)
 
